@@ -1,0 +1,38 @@
+//code for emergency button
+void setup() 
+{
+#define LED_RED 4
+pinMode(LED_RED,OUTPUT);
+
+#define LED_GREEN 5
+pinMoed(LED_GREEN,OUTPUT);
+
+#define BUTTONK1 8
+pinMode(BUTTONK1, INPUT_PULLUP);
+
+#include "RichShieldPassiveBuzzer.h"
+#define PassiveBuzzerPin 3
+PassiveBuzzer buz(PassiveBuzzerPin)
+
+}
+
+void loop() 
+{
+  int buttonState = digitalRead(buttonPin);
+  
+  if (BUTTONK1 == HIGH)
+  {
+    digitalWrite(LED_RED,HIGH);
+
+    for (int freq = 400; freq <= 1200; freq += 10)
+    {
+      tone(PassiveBuzzerPin, freq);
+      delay(5);
+    }
+    for (int freq = 1200; freq >=400; freq -= 10)
+    {
+      tone(PassiveBuzzerPin, freq);
+      delay(5);
+    }
+  }
+}
