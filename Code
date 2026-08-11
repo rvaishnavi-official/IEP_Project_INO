@@ -36,3 +36,37 @@ void loop()
     }
   }
 }
+
+
+// code for light sensor
+
+floint LDR = A2;
+int LED = 4;
+int KNOB = A0;
+
+int threshold = 1000;
+
+void setup() {
+  pinMode(LED, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int lightValue = analogRead(LDR);
+  int knobValue = analogRead(KNOB);
+
+  Serial.println(lightValue);  
+
+  if (knobValue > 512) {
+    digitalWrite(LED, LOW);   
+  } 
+  else {
+    if (lightValue > threshold) {
+      digitalWrite(LED, LOW);   // 
+    } else {
+      digitalWrite(LED, HIGH); 
+    }
+  }
+
+  delay(500);
+}
