@@ -37,14 +37,50 @@ void loop()
   }
 }
 
+//
 
 // code for light sensor
 
-floint LDR = A2;
-int LED = 4;
+int LDR = A2;
+int LED_RED = 4;
 int KNOB = A0;
 
 int threshold = 1000;
+
+void setup() {
+  pinMode(LED_RED, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int lightValue = analogRead(LDR);
+  int knobValue = analogRead(KNOB);
+
+  Serial.println(lightValue);  
+
+  if (knobValue > 512) {
+    digitalWrite(LED_RED, LOW);   
+  } 
+  else {
+    if (lightValue > threshold) {
+      digitalWrite(LED_RED, LOW);   
+    } else {
+      digitalWrite(LED_RED, HIGH); 
+    }
+  }
+
+  delay(500);
+}
+
+
+//
+
+// add humidity sensor
+int LDR = A2;
+int LED = 4;
+int KNOB = A0;
+
+int threshold = 700;
 
 void setup() {
   pinMode(LED, OUTPUT);
@@ -62,9 +98,9 @@ void loop() {
   } 
   else {
     if (lightValue > threshold) {
-      digitalWrite(LED, LOW);   // 
+      digitalWrite(LED, LOW);   
     } else {
-      digitalWrite(LED, HIGH); 
+      digitalWrite(LED, HIGH);  
     }
   }
 
