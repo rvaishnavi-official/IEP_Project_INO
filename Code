@@ -1,12 +1,18 @@
-// code for light sensor
+// light sensor
 
 int LDR = A2;
 int LED_RED = 4;
 int KNOB = A0;
 
+// humidity sensor
+int NTC = A1;
+int LED_BLUE = 6;
+
 void setup()
 {
   pinMode(LED_RED, OUTPUT);
+  Serial.begin(9600);
+  pinMode(LED_BLUE, OUTPUT);
   Serial.begin(9600);
 }
 
@@ -47,21 +53,7 @@ void lightSensor()
       digitalWrite(LED_RED, HIGH);
     }
   }
-}
-
-//
-
-// add humidity sensor
-int NTC = A1;
-int LED_BLUE = 6;
-
-void setup() {
-  pinMode(LED_BLUE, OUTPUT);
-  Serial.begin(9600);
-}
-
-void loop() {
-  int tempValue = analogRead(NTC);
+   int tempValue = analogRead(NTC);
 
   Serial.println(tempValue);
 
@@ -79,3 +71,8 @@ void loop() {
 
   delay(500);
 }
+
+
+//
+
+
