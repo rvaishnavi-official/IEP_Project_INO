@@ -129,12 +129,14 @@ void checkSOSAlert()
 {
   if (digitalRead(BUTTONK2) == LOW)
   {
+    // Button has just been pressed
     if (buttonPressTime == 0)
     {
       buttonPressTime = millis();
     }
 
-    if (millis() - buttonPressTime >=2000)
+    // Hold for 2 seconds → activate SOS
+    if (millis() - buttonPressTime >= 2000 && sosActive == 0)
     {
       sosActive = 1;
       SOSAlert();
@@ -142,23 +144,31 @@ void checkSOSAlert()
   }
   else
   {
-    if (buttonPressTime != 0 && millis() - buttonPressTime < 2000)
+    // Button was released
+    if (buttonPressTime != 0)
     {
-      if (settingMode == 0 || settingMode == 1)
+      unsigned long pressDuration = millis() - buttonPressTime;
+
+      // Short press
+      if (pressDuration < 2000)
       {
-        nextDigit();
+        if (sosActive == 1)
+        {
+          // Short press while SOS is active → turn SOS OFF
+          sosActive = 0;
+          digitalWrite(LED_RED, LOW);
+        }
+        else if (settingMode == 0 || settingMode == 1)
+        {
+          // Short press during time setting → next digit
+          nextDigit();
 
-        lastButtonTime = millis();
-        timeSaved = 0;
+          lastButtonTime = millis();
+          timeSaved = 0;
+        }
       }
-    }
-    buttonPressTime = 0;
 
-    if (sosActive == 1)
-    {
-      sosActive = 0;
-
-      digitalWrite(LED_RED, LOW);
+      buttonPressTime = 0;
     }
   }
 }
