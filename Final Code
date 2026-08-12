@@ -1,0 +1,357 @@
+//Libraries and Defintions
+#include "RichShieldTM1637.h"
+#include "RichShieldPassiveBuzzer.h"
+
+#define CLK 10
+#define DIO 11
+
+#define LED_RED 4
+#define LED_GREEN 5
+#define LED_BLUE 6
+
+#define BUTTONK1 8
+#define BUTTONK2 9
+
+#define PassiveBuzzerPin 3
+
+#define LDR A2
+#define KNOB A0
+#define NTC A1
+
+#define LIGHT_THRESHOLD 1000
+
+
+TM1637 disp(CLK,DIO);
+PassiveBuzzer buz(PassiveBuzzerPin);
+
+/*Global Variables - included global variables for convenience*/
+
+//1. For Current Time
+int currentHour = 0;
+int currentMinute = 0;
+
+//2. Medicine Reminder Time
+int medicineHour = 0;
+int medicineMinute = 0;
+
+//3. To set time
+int timeDigits[4] = {0,0,0,0};
+int maxDigit[4] = {2,9,5,9};
+int digitMultiplier[4] = {1000, 100, 10, 1};
+
+int selectedDigit = 0;
+
+//4. SOS Status
+bool sosActive = 0;
+
+//5. Timer Variables
+unsigned long previousMillis = 0;
+unsigned long lastButtonTime = 0;
+unsigned long buttonPressTime = 0;
+bool timeSaved = 0;
+int settingMode = 0;
+
+//6. To prevent repeated medicine alerts
+bool medicineTriggered = 0;
+
+
+
+/*Function Prototypes*/
+void checkSOSAlert();
+void SOSAlert();
+
+void MedicineReminder();
+
+void increaseDigit();
+void nextDigit();
+void saveTime();
+
+void updateClock();
+void checkMedicineTime();
+void medicineAlert();
+
+void lightSensor();
+void temperatureSensor();
+
+void setup() 
+{
+  pinMode(LED_RED,OUTPUT);
+  pinMode(LED_GREEN,OUTPUT);
+  pinMode(LED_BLUE,OUTPUT);
+  
+
+  pinMode(BUTTONK1, INPUT_PULLUP);
+  pinMode(BUTTONK2, INPUT_PULLUP);
+
+  disp.init();
+
+  Serial.begin(9600);
+
+  previousMillis = millis();
+  lastButtonTime = millis();
+  settingMode = 0;
+  disp.display(0);
+}
+
+
+
+void loop()
+{
+  checkSOSAlert();
+
+  if (sosActive == 0)
+  {
+    if (settingMode == 0 || settingMode == 1)
+    {
+      MedicineReminder();
+    }
+    else 
+    {
+      if (settingMode == 2)
+      {
+      updateClock();
+      checkMedicineTime();
+      int displayTime = currentHour * 100 + currentMinute;
+      disp.display(displayTime);
+      }
+
+      lightSensor();
+      temperatureSensor();
+    }
+  }
+}
+
+
+
+//Function Defintions
+
+void checkSOSAlert()
+{
+  if (digitalRead(BUTTONK2) == LOW)
+  {
+    if (buttonPressTime == 0)
+    {
+      buttonPressTime = millis();
+    }
+
+    if (millis() - buttonPressTime >=2000)
+    {
+      sosActive = 1;
+      SOSAlert();
+    }
+  }
+  else
+  {
+    if (buttonPressTime != 0 && millis() - buttonPressTime < 2000)
+    {
+      if (settingMode == 0 || settingMode == 1)
+      {
+        nextDigit();
+
+        lastButtonTime = millis();
+        timeSaved = 0;
+      }
+    }
+    buttonPressTime = 0;
+
+    if (sosActive == 1)
+    {
+      sosActive = 0;
+
+      digitalWrite(LED_RED, LOW);
+    }
+  }
+}
+
+
+void SOSAlert() 
+{
+    digitalWrite(LED_RED,HIGH);
+
+    for (int freq = 1200; freq >= 400; freq -= 10)
+    {
+      buz.playTone(freq,5);
+    }
+
+    for (int freq = 400; freq <= 1200; freq += 10)
+    {
+      buz.playTone(freq,5);
+    }
+
+}
+
+
+void MedicineReminder()
+{
+  if (digitalRead(BUTTONK1) == LOW)
+  {
+    increaseDigit();
+    lastButtonTime = millis();
+    delay(200);
+  }
+
+  int displayTime = 0;
+  for (int i = 0; i < 4; i++)
+  {
+    displayTime = displayTime + timeDigits[i]*digitMultiplier[i];
+  }
+
+  disp.display(displayTime);
+
+  if (millis() - lastButtonTime >= 10000 && timeSaved == 0)
+  {
+    saveTime();
+    timeSaved = 1;
+  }
+}
+
+
+void increaseDigit()
+{
+  timeDigits[selectedDigit]++;
+
+  if (timeDigits[selectedDigit] > maxDigit[selectedDigit])
+  {
+    timeDigits[selectedDigit] = 0;
+  }
+}
+
+
+void nextDigit()
+{
+  selectedDigit++;
+
+  if (selectedDigit ==4)
+  {
+    selectedDigit = 0;
+  }
+}
+
+
+void saveTime() //--needs changes
+{
+  int savedHour =
+    timeDigits[0] * 10 + timeDigits[1];
+
+  int savedMinute =
+    timeDigits[2] * 10 + timeDigits[3];
+
+  if (settingMode == 0)
+  {
+    currentHour = savedHour;
+    currentMinute = savedMinute;
+
+    settingMode = 1;
+
+    timeDigits[0] = 0;
+    timeDigits[1] = 0;
+    timeDigits[2] = 0;
+    timeDigits[3] = 0;
+
+    selectedDigit = 0;
+
+    lastButtonTime = millis();
+    timeSaved = 0;
+
+    previousMillis = millis();
+  }
+  else 
+  {
+    if (settingMode == 1)
+    {
+    medicineHour = savedHour;
+    medicineMinute = savedMinute;
+    settingMode = 2;
+    previousMillis = millis();
+    }
+  }
+}
+
+
+void updateClock()
+{
+  if (millis() - previousMillis >=60000)
+  {
+    previousMillis = millis();
+    currentMinute++;
+
+    if (currentMinute >= 60)
+    {
+      currentMinute = 0;
+      currentHour++;
+
+      if(currentHour >= 24)
+      {
+        currentHour = 0;
+      }
+    }
+  }
+}
+
+void checkMedicineTime()
+{
+  if (currentHour == medicineHour && currentMinute == medicineMinute)
+  {
+    if(medicineTriggered == 0)
+    {
+      medicineAlert();
+      medicineTriggered = 1;
+    }
+  }
+  else
+  {
+    medicineTriggered = 0;
+  }
+}
+
+void medicineAlert()
+{
+  digitalWrite(LED_GREEN,HIGH);
+  buz.playTone(1000,1000);
+  digitalWrite(LED_GREEN,LOW);
+}
+
+void lightSensor()
+{
+  int lightValue = analogRead(LDR);
+  int knobValue = analogRead(KNOB);
+  Serial.print("Light: ");
+  Serial.println(lightValue);
+
+  if (knobValue > 512) {
+    digitalWrite(LED_RED, LOW);   
+  } 
+  else 
+  {
+    if (lightValue > LIGHT_THRESHOLD) 
+    {
+      digitalWrite(LED_RED, LOW);   
+    } 
+    else 
+    {
+      digitalWrite(LED_RED, HIGH); 
+    }
+  }
+}
+
+void temperatureSensor()
+{
+  int tempValue = analogRead(NTC);
+  Serial.println(tempValue);
+
+  if (tempValue < 200) 
+  {
+    digitalWrite(LED_BLUE, LOW);
+  }
+  else 
+  {
+    if (tempValue > 400) 
+    {
+      digitalWrite(LED_BLUE, HIGH);
+    }
+    else 
+    {
+      digitalWrite(LED_BLUE, LOW);
+    }
+  }
+}
