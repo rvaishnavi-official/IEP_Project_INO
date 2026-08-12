@@ -76,31 +76,28 @@ void loop() {
 //
 
 // add humidity sensor
-int LDR = A2;
-int LED = 4;
-int KNOB = A0;
-
-int threshold = 700;
+#define NTC A1
+#define LED_BLUE 6
 
 void setup() {
-  pinMode(LED, OUTPUT);
+  pinMode(LED_BLUE, OUTPUT);
   Serial.begin(9600);
 }
 
 void loop() {
-  int lightValue = analogRead(LDR);
-  int knobValue = analogRead(KNOB);
+  int tempValue = analogRead(NTC);
 
-  Serial.println(lightValue);  
+  Serial.println(tempValue);
 
-  if (knobValue > 512) {
-    digitalWrite(LED, LOW);   
-  } 
+  if (tempValue < 200) {
+    digitalWrite(LED_BLUE, LOW);
+  }
   else {
-    if (lightValue > threshold) {
-      digitalWrite(LED, LOW);   
-    } else {
-      digitalWrite(LED, HIGH);  
+    if (tempValue > 400) {
+      digitalWrite(LED_BLUE, HIGH);
+    }
+    else {
+      digitalWrite(LED_BLUE, LOW);
     }
   }
 
