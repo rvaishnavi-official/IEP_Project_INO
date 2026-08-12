@@ -1,12 +1,12 @@
 // light sensor
-
 int LDR = A2;
 int LED_RED = 4;
 int KNOB = A0;
 
-// humidity sensor
+// temperature sensor
 int NTC = A1;
 int LED_BLUE = 6;
+
 
 void setup()
 {
@@ -15,10 +15,15 @@ void setup()
   Serial.begin(9600);
 }
 
+
 void loop()
 {
   lightSensor();
+  tempSensor();
+
+  delay(500);
 }
+
 
 void lightSensor()
 {
@@ -52,28 +57,31 @@ void lightSensor()
       digitalWrite(LED_RED, HIGH);
     }
   }
+}
 
-void lightSensor()
+
+void tempSensor()
 {
-   int tempValue = analogRead(NTC);
+  int tempValue = analogRead(NTC);
 
   Serial.println(tempValue);
 
-  if (tempValue < 200) {
+  if (tempValue < 200)
+  {
     digitalWrite(LED_BLUE, LOW);
   }
-  else {
-    if (tempValue > 400) {
+  else
+  {
+    if (tempValue > 400)
+    {
       digitalWrite(LED_BLUE, HIGH);
     }
-    else {
+    else
+    {
       digitalWrite(LED_BLUE, LOW);
     }
   }
-
-  delay(500);
 }
-
 
 //
 
