@@ -323,45 +323,60 @@ void medicineAlert()
 
 void lightSensor()
 {
-  int lightValue = analogRead(LDR);
+  int lightReadings[3];
+  int total = 0;
+
+  for (int i = 0; i < 3; i++)
+  {
+    lightReadings[i] = analogRead(LDR);
+    total += lightReadings[i];
+  }
+
+  int lightValue = total / 3;
   int knobValue = analogRead(KNOB);
-  Serial.print("Light: ");
+  int LIGHT_THRESHOLD = 1000;
+
   Serial.println(lightValue);
 
-  if (knobValue > 512) {
-    digitalWrite(LED_RED, LOW);   
-  } 
-  else 
+  if (knobValue > 512)
   {
-    if (lightValue > LIGHT_THRESHOLD) 
+    digitalWrite(LED_RED, LOW);
+  }
+  else
+  {
+    if (lightValue > LIGHT_THRESHOLD)
     {
-      digitalWrite(LED_RED, LOW);   
-    } 
-    else 
+      digitalWrite(LED_RED, LOW);
+    }
+    else
     {
-      digitalWrite(LED_RED, HIGH); 
+      digitalWrite(LED_RED, HIGH);
     }
   }
 }
 
-void temperatureSensor()
+
+void tempSensor()
 {
   int tempValue = analogRead(NTC);
+
   Serial.println(tempValue);
 
-  if (tempValue < 200) 
+  if (tempValue < 200)
   {
     digitalWrite(LED_BLUE, LOW);
   }
-  else 
+  else
   {
-    if (tempValue > 400) 
+    if (tempValue > 400)
     {
       digitalWrite(LED_BLUE, HIGH);
     }
-    else 
+    else
     {
       digitalWrite(LED_BLUE, LOW);
     }
   }
 }
+
+//
