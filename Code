@@ -52,6 +52,9 @@ void lightSensor()
       digitalWrite(LED_RED, HIGH);
     }
   }
+
+void lightSensor()
+{
    int tempValue = analogRead(NTC);
 
   Serial.println(tempValue);
