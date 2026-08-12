@@ -35,7 +35,7 @@ int medicineMinute = 0;
 
 //3. Arrays
 int digits[4] = {0, 0, 0, 0};
-int maxDigit[4] = {2, 9, 5, 9};
+int maxDigit[4] = {2, 3, 5, 9};
 
 //4. Timing variables
 unsigned long previousMillis = 0;
@@ -158,12 +158,6 @@ void checkSOS()
             {
             selectedDigit = 0;
             }
-
-          lastInputTime = millis();
-          if (millis() - lastInputTime >=10000)
-          {
-            saveTime();
-          }
           }
         }
       }
@@ -216,18 +210,15 @@ void saveTime()
     settingMode = 1;
     resetDigits();
   }
-  else 
-  {
-    if (settingMode == 1)
+  else if (settingMode == 1)
     {
     medicineHour = hour;
     medicineMinute = minute;
     settingMode = 2;
     resetDigits();
-
     previousMillis = millis();
     }
-  }
+}
 
 void resetDigits()
 {
