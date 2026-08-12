@@ -1,7 +1,3 @@
-
-
-//
-
 // code for light sensor
 
 int LDR = A2;
