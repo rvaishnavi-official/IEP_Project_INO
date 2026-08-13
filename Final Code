@@ -1,7 +1,8 @@
-//Libraries and Defintions
+//Libraries
 #include "RichShieldTM1637.h"
 #include "RichShieldPassiveBuzzer.h"
 
+//Definitions
 #define CLK 10
 #define DIO 11
 
@@ -20,7 +21,6 @@
 
 #define LIGHT_THRESHOLD 1000
 
-
 TM1637 disp(CLK,DIO);
 PassiveBuzzer buz(PassiveBuzzerPin);
 
@@ -38,7 +38,6 @@ int medicineMinute = 0;
 int timeDigits[4] = {0,0,0,0};
 int maxDigit[4] = {9,9,9,9};
 int digitMultiplier[4] = {1000, 100, 10, 1};
-
 int selectedDigit = 0;
 
 //4. SOS Status
@@ -53,7 +52,6 @@ int settingMode = 0;
 
 //6. To prevent repeated medicine alerts
 bool medicineTriggered = 0;
-
 
 
 /*Function Prototypes*/
@@ -79,20 +77,17 @@ void setup()
   pinMode(LED_GREEN,OUTPUT);
   pinMode(LED_BLUE,OUTPUT);
   
-
   pinMode(BUTTONK1, INPUT_PULLUP);
   pinMode(BUTTONK2, INPUT_PULLUP);
 
   disp.init();
-
   Serial.begin(9600);
 
-  previousMillis = millis();
-  lastButtonTime = millis();
-  settingMode = 0;
-  disp.display(0);
+  previousMillis = millis(); //Referenced
+  lastButtonTime = millis(); //Referenced
+  settingMode = 0; //Referenced
+  disp.display(0); //Referenced
 }
-
 
 
 void loop()
@@ -122,20 +117,16 @@ void loop()
 }
 
 
-
 //Function Defintions
 
 void checkSOSAlert()
 {
-  if (digitalRead(BUTTONK2) == LOW)
+  if (digitalRead(BUTTONK2) == LOW) //Low means K2 is pressed
   {
-    // Button has just been pressed
     if (buttonPressTime == 0)
     {
       buttonPressTime = millis();
     }
-
-    // Hold for 2 seconds → activate SOS
     if (millis() - buttonPressTime >= 2000 && sosActive == 0)
     {
       sosActive = 1;
@@ -144,23 +135,19 @@ void checkSOSAlert()
   }
   else
   {
-    // Button was released
     if (buttonPressTime != 0)
     {
       unsigned long pressDuration = millis() - buttonPressTime;
 
-      // Short press
       if (pressDuration < 2000)
       {
         if (sosActive == 1)
         {
-          // Short press while SOS is active → turn SOS OFF
           sosActive = 0;
           digitalWrite(LED_RED, LOW);
         }
         else if (settingMode == 0 || settingMode == 1)
         {
-          // Short press during time setting → next digit
           nextDigit();
 
           lastButtonTime = millis();
@@ -178,12 +165,12 @@ void SOSAlert()
 {
     digitalWrite(LED_RED,HIGH);
 
-    for (int freq = 1200; freq >= 400; freq -= 10)
+    for (int freq = 1200; freq >= 400; freq -= 10) //Referenced
     {
       buz.playTone(freq,5);
     }
 
-    for (int freq = 400; freq <= 1200; freq += 10)
+    for (int freq = 400; freq <= 1200; freq += 10) //Referenced
     {
       buz.playTone(freq,5);
     }
@@ -238,7 +225,7 @@ void nextDigit()
 }
 
 
-void saveTime() //--needs changes
+void saveTime()
 {
   int savedHour =
     timeDigits[0] * 10 + timeDigits[1];
