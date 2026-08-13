@@ -205,7 +205,6 @@ void SOSAlert()
 
   delay(100);
 
-  // Sharp emergency warning beeps
   buz.playTone(1600, 250);
   delay(100);
 
@@ -215,7 +214,6 @@ void SOSAlert()
   buz.playTone(1600, 250);
   delay(150);
 
-  // Low dramatic ending
   buz.playTone(700, 300);
   buz.playTone(500, 500);
 }
@@ -267,7 +265,7 @@ void nextDigit()
 }
 
 
-void saveTime() //--needs changes
+void saveTime()
 {
   int savedHour =
     timeDigits[0] * 10 + timeDigits[1];
