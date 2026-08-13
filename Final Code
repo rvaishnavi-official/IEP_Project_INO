@@ -338,19 +338,19 @@ void lightSensor()
 
   Serial.println(lightValue);
 
-  if (knobValue > 512)
+  if (knobValue < 512)
   {
-    digitalWrite(LED_RED, LOW);
+    digitalWrite(LED_GREEN, LOW);
   }
   else
   {
     if (lightValue > LIGHT_THRESHOLD)
     {
-      digitalWrite(LED_RED, LOW);
+      digitalWrite(LED_GREEN, LOW);
     }
     else
     {
-      digitalWrite(LED_RED, HIGH);
+      digitalWrite(LED_GREEN HIGH);
     }
   }
 }
