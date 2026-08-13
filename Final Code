@@ -175,20 +175,51 @@ void checkSOSAlert()
 
 void SOSAlert() 
 {
-    digitalWrite(LED_RED,HIGH);
+  digitalWrite(LED_RED, HIGH);
+    // Long dramatic siren - first sweep
+  for (int freq = 500; freq <= 1400; freq += 15)
+  {
+    buz.playTone(freq, 8);
+  }
 
-    for (int freq = 1200; freq >= 400; freq -= 10)
-    {
-      buz.playTone(freq,5);
-    }
+  for (int freq = 1400; freq >= 500; freq -= 15)
+  {
+    buz.playTone(freq, 8);
+  }
 
-    for (int freq = 400; freq <= 1200; freq += 10)
-    {
-      buz.playTone(freq,5);
-    }
+  // Second sweep - faster and higher
+  for (int freq = 700; freq <= 1700; freq += 20)
+  {
+    buz.playTone(freq, 7);
+  }
 
+  for (int freq = 1700; freq >= 700; freq -= 20)
+  {
+    buz.playTone(freq, 7);
+  }
+
+  // Third sweep - dramatic final rise
+  for (int freq = 400; freq <= 1800; freq += 20)
+  {
+    buz.playTone(freq, 8);
+  }
+
+  delay(100);
+
+  // Sharp emergency warning beeps
+  buz.playTone(1600, 250);
+  delay(100);
+
+  buz.playTone(1600, 250);
+  delay(100);
+
+  buz.playTone(1600, 250);
+  delay(150);
+
+  // Low dramatic ending
+  buz.playTone(700, 300);
+  buz.playTone(500, 500);
 }
-
 
 void MedicineReminder()
 {
