@@ -1,74 +1,61 @@
-//Libraries and Defintions
+//Libraries
 #include "RichShieldTM1637.h"
 #include "RichShieldPassiveBuzzer.h"
 
+
+//Definitions
 #define CLK 10
 #define DIO 11
-
 #define LED_RED 4
 #define LED_GREEN 5
 #define LED_BLUE 6
-
 #define BUTTONK1 8
 #define BUTTONK2 9
-
 #define PassiveBuzzerPin 3
-
 #define LDR A2
 #define KNOB A0
 #define NTC A1
-
-
-
 TM1637 disp(CLK,DIO);
 PassiveBuzzer buz(PassiveBuzzerPin);
 
-/*Global Variables - included global variables for convenience*/
 
-//1. For Current Time
+/*Global Variables - included global variables for convenience*/
+//1. Current Time & Medicine Reminder Time - Values
 int currentHour = 0;
 int currentMinute = 0;
-
-//2. Medicine Reminder Time
 int medicineHour = 0;
 int medicineMinute = 0;
 
-//3. To set time
+//2. To set time - Values
 int timeDigits[4] = {0,0,0,0};
 int maxDigit[4] = {2,9,5,9};
 int digitMultiplier[4] = {1000, 100, 10, 1};
-
 int selectedDigit = 0;
 
-//4. SOS Status
+//3. SOS Status - referenced, label
 bool sosActive = 0;
 
-//5. Timer Variables
+//4. Timer Variables - referenced, label
 unsigned long previousMillis = 0;
 unsigned long lastButtonTime = 0;
 unsigned long buttonPressTime = 0;
 bool timeSaved = 0;
 int settingMode = 0; //0=current time, 1=medicine time, 2=normal operations
 
-//6. To prevent repeated medicine alerts
+//5. To prevent repeated medicine alerts - referenced, label
 bool medicineTriggered = 0;
-
 
 
 /*Function Prototypes*/
 void checkSOSAlert();
 void SOSAlert();
-
 void MedicineReminder();
-
 void increaseDigit();
 void nextDigit();
 void saveTime();
-
 void updateClock();
 void checkMedicineTime();
 void medicineAlert();
-
 void lightSensor();
 void tempSensor();
 
@@ -77,27 +64,21 @@ void setup()
   pinMode(LED_RED,OUTPUT);
   pinMode(LED_GREEN,OUTPUT);
   pinMode(LED_BLUE,OUTPUT);
-  
-
   pinMode(BUTTONK1, INPUT_PULLUP);
   pinMode(BUTTONK2, INPUT_PULLUP);
-
-  disp.init();
+  disp.init(); disp.display(0);
+  settingMode = 0;
 
   Serial.begin(9600);
 
   previousMillis = millis();
   lastButtonTime = millis();
-  settingMode = 0;
-  disp.display(0);
 }
-
 
 
 void loop()
 {
-  checkSOSAlert();
-  lightSensor(); tempSensor();
+  checkSOSAlert(); lightSensor(); tempSensor();
 
   if (sosActive == 0)
   {
@@ -115,10 +96,8 @@ void loop()
       disp.display(displayTime);
       }
     }
-    
   }
 }
-
 
 
 //Function Defintions
@@ -127,13 +106,10 @@ void checkSOSAlert()
 {
   if (digitalRead(BUTTONK2) == LOW)
   {
-    // Button has just been pressed
     if (buttonPressTime == 0)
     {
       buttonPressTime = millis();
     }
-
-    // Hold for 2 seconds → activate SOS
     if (millis() - buttonPressTime >= 2000 && sosActive == 0)
     {
       sosActive = 1;
@@ -142,25 +118,20 @@ void checkSOSAlert()
   }
   else
   {
-    // Button was released
     if (buttonPressTime != 0)
     {
       unsigned long pressDuration = millis() - buttonPressTime;
 
-      // Short press
       if (pressDuration < 2000)
       {
         if (sosActive == 1)
         {
-          // Short press while SOS is active → turn SOS OFF
           sosActive = 0;
           digitalWrite(LED_RED, LOW);
         }
         else if (settingMode == 0 || settingMode == 1)
         {
-          // Short press during time setting → next digit
           nextDigit();
-
           lastButtonTime = millis();
           timeSaved = 0;
         }
@@ -170,7 +141,6 @@ void checkSOSAlert()
     }
   }
 }
-
 
 void SOSAlert() 
 {
