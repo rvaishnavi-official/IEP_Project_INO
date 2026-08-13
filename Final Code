@@ -216,7 +216,6 @@ void MedicineReminder()
   }
 }
 
-
 void increaseDigit()
 {
   timeDigits[selectedDigit]++;
@@ -227,7 +226,6 @@ void increaseDigit()
   }
 }
 
-
 void nextDigit()
 {
   selectedDigit++;
@@ -237,7 +235,6 @@ void nextDigit()
     selectedDigit = 0;
   }
 }
-
 
 void saveTime()
 {
@@ -277,7 +274,6 @@ void saveTime()
     }
   }
 }
-
 
 void updateClock()
 {
@@ -390,7 +386,6 @@ void lightSensor()
   }
 }
 
-
 void tempSensor()
 {
   int tempValue = analogRead(NTC);
@@ -407,4 +402,3 @@ void tempSensor()
     digitalWrite(LED_BLUE, LOW);
   }
 }
-
