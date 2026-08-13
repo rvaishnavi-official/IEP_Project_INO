@@ -36,7 +36,7 @@ int medicineMinute = 0;
 
 //3. To set time
 int timeDigits[4] = {0,0,0,0};
-int maxDigit[4] = {2,9,5,9};
+int maxDigit[4] = {9,9,9,9};
 int digitMultiplier[4] = {1000, 100, 10, 1};
 
 int selectedDigit = 0;
