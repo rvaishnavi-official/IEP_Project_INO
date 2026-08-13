@@ -207,7 +207,7 @@ void MedicineReminder()
 
   disp.display(displayTime);
 
-  if (millis() - lastButtonTime >= 10000 && timeSaved == 0)
+  if (millis() - lastButtonTime >= 5000 && timeSaved == 0)
   {
     saveTime();
     timeSaved = 1;
@@ -316,7 +316,41 @@ void checkMedicineTime()
 void medicineAlert()
 {
   digitalWrite(LED_GREEN,HIGH);
-  buz.playTone(1000,1000);
+
+  // Jingle Bells
+  buz.playTone(659, 250);   // E5
+  buz.playTone(659, 250);   // E5
+  buz.playTone(659, 500);   // E5
+
+  buz.playTone(659, 250);   // E5
+  buz.playTone(659, 250);   // E5
+  buz.playTone(659, 500);   // E5
+
+  buz.playTone(659, 250);   // E5
+  buz.playTone(784, 250);   // G5
+  buz.playTone(523, 350);   // C5
+  buz.playTone(587, 150);   // D5
+  buz.playTone(659, 700);   // E5
+
+  delay(150);
+
+  buz.playTone(698, 250);   // F5
+  buz.playTone(698, 250);   // F5
+  buz.playTone(698, 250);   // F5
+  buz.playTone(698, 250);   // F5
+
+  buz.playTone(698, 250);   // F5
+  buz.playTone(659, 250);   // E5
+  buz.playTone(659, 250);   // E5
+  buz.playTone(659, 125);   // E5
+  buz.playTone(659, 125);   // E5
+
+  buz.playTone(659, 250);   // E5
+  buz.playTone(587, 250);   // D5
+  buz.playTone(587, 250);   // D5
+  buz.playTone(659, 250);   // E5
+  buz.playTone(587, 500);   // D5
+  buz.playTone(784, 500);   // G5
   digitalWrite(LED_GREEN,LOW);
 }
 
@@ -361,8 +395,8 @@ void tempSensor()
 
   Serial.print("Temp value: ");
   Serial.println(tempValue);
-
-  if (tempValue > 470)
+ 
+  if (tempValue > 480)
   {
     digitalWrite(LED_BLUE, HIGH);
   }
@@ -370,8 +404,5 @@ void tempSensor()
   {
     digitalWrite(LED_BLUE, LOW);
   }
-  delay(500);
 }
-
-//
 
