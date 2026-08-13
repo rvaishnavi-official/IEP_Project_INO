@@ -104,7 +104,7 @@ void loop()
 }
 
 
-//Function Defintions
+//Function Definitions
 
 void checkSOSAlert()
 {
