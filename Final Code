@@ -19,9 +19,10 @@
 #define KNOB A0
 #define NTC A1
 
+
+
 TM1637 disp(CLK,DIO);
 PassiveBuzzer buz(PassiveBuzzerPin);
-
 
 /*Global Variables - included global variables for convenience*/
 
@@ -52,6 +53,7 @@ int settingMode = 0;
 
 //6. To prevent repeated medicine alerts
 bool medicineTriggered = 0;
+
 
 
 /*Function Prototypes*/
@@ -92,6 +94,7 @@ void setup()
 }
 
 
+
 void loop()
 {
   checkSOSAlert();
@@ -116,6 +119,7 @@ void loop()
     
   }
 }
+
 
 
 //Function Defintions
@@ -167,6 +171,7 @@ void checkSOSAlert()
     }
   }
 }
+
 
 void SOSAlert() 
 {
@@ -263,7 +268,7 @@ void nextDigit()
 }
 
 
-void saveTime()
+void saveTime() //--needs changes
 {
   int savedHour =
     timeDigits[0] * 10 + timeDigits[1];
@@ -431,3 +436,4 @@ void tempSensor()
     digitalWrite(LED_BLUE, LOW);
   }
 }
+
