@@ -98,6 +98,7 @@ void setup()
 void loop()
 {
   checkSOSAlert();
+  lightSensor(); tempSensor();
 
   if (sosActive == 0)
   {
@@ -115,7 +116,7 @@ void loop()
       disp.display(displayTime);
       }
     }
-    lightSensor(); tempSensor();
+    
   }
 }
 
@@ -336,7 +337,7 @@ void lightSensor()
 
   Serial.println(lightValue);
 
-  if (knobValue > 512)
+  if (knobValue < 512)
   {
     digitalWrite(LED_GREEN, LOW);
   }
@@ -358,21 +359,19 @@ void tempSensor()
 {
   int tempValue = analogRead(NTC);
 
+  Serial.print("Temp value: ");
   Serial.println(tempValue);
 
-  if (tempValue < 200)
+  if (tempValue > 470)
   {
-    digitalWrite(LED_BLUE, LOW);
+    digitalWrite(LED_BLUE, HIGH);
   }
   else
   {
-    if (tempValue > 400)
-    {
-      digitalWrite(LED_BLUE, HIGH);
-    }
-    else
-    {
-      digitalWrite(LED_BLUE, LOW);
-    }
+    digitalWrite(LED_BLUE, LOW);
   }
+  delay(500);
 }
+
+//
+
