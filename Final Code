@@ -114,10 +114,8 @@ void loop()
       int displayTime = currentHour * 100 + currentMinute;
       disp.display(displayTime);
       }
-
-      lightSensor();
-      
     }
+    lightSensor(); tempSensor();
   }
 }
 
@@ -338,7 +336,7 @@ void lightSensor()
 
   Serial.println(lightValue);
 
-  if (knobValue < 512)
+  if (knobValue > 512)
   {
     digitalWrite(LED_GREEN, LOW);
   }
@@ -350,7 +348,7 @@ void lightSensor()
     }
     else
     {
-      digitalWrite(LED_GREEN HIGH);
+      digitalWrite(LED_GREEN, HIGH);
     }
   }
 }
