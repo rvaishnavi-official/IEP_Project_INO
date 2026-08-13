@@ -8,7 +8,6 @@
 #define LED_RED 4
 #define LED_GREEN 5
 #define LED_BLUE 6
-#define LED_YELLOW 7
 
 #define BUTTONK1 8
 #define BUTTONK2 9
@@ -36,7 +35,7 @@ int medicineMinute = 0;
 
 //3. To set time
 int timeDigits[4] = {0,0,0,0};
-int maxDigit[4] = {9,9,9,9};
+int maxDigit[4] = {2,9,5,9};
 int digitMultiplier[4] = {1000, 100, 10, 1};
 
 int selectedDigit = 0;
@@ -49,7 +48,7 @@ unsigned long previousMillis = 0;
 unsigned long lastButtonTime = 0;
 unsigned long buttonPressTime = 0;
 bool timeSaved = 0;
-int settingMode = 0;
+int settingMode = 0; //0=current time, 1=medicine time, 2=normal operations
 
 //6. To prevent repeated medicine alerts
 bool medicineTriggered = 0;
