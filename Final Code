@@ -47,15 +47,19 @@ bool medicineTriggered = 0;
 
 
 /*Function Prototypes*/
-void checkSOSAlert();
-void SOSAlert();
-void MedicineReminder();
+void checkSOSAlert(); //checker
+void SOSAlert(); //action
+
+void MedicineReminder(); //allows user to input medicine time
 void increaseDigit();
 void nextDigit();
-void saveTime();
-void updateClock();
-void checkMedicineTime();
-void medicineAlert();
+void saveTime(); //takes 4 digits input by the user and saves them as the hour and minute respectively
+
+void updateClock(); //to make the clock moving
+
+void checkMedicineTime(); //checker
+void medicineAlert(); //action
+
 void lightSensor();
 void tempSensor();
 
