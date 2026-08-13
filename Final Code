@@ -149,7 +149,7 @@ void checkSOSAlert()
 void SOSAlert() 
 {
   digitalWrite(LED_RED, HIGH);
-    // Long dramatic siren - first sweep
+
   for (int freq = 500; freq <= 1400; freq += 15)
   {
     buz.playTone(freq, 8);
@@ -160,7 +160,6 @@ void SOSAlert()
     buz.playTone(freq, 8);
   }
 
-  // Second sweep - faster and higher
   for (int freq = 700; freq <= 1700; freq += 20)
   {
     buz.playTone(freq, 7);
@@ -171,7 +170,6 @@ void SOSAlert()
     buz.playTone(freq, 7);
   }
 
-  // Third sweep - dramatic final rise
   for (int freq = 400; freq <= 1800; freq += 20)
   {
     buz.playTone(freq, 8);
