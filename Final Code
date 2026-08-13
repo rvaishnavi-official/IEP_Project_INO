@@ -263,7 +263,7 @@ void nextDigit()
 }
 
 
-void saveTime() //--needs changes
+void saveTime()
 {
   int savedHour =
     timeDigits[0] * 10 + timeDigits[1];
